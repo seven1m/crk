@@ -13,14 +13,34 @@ a {
 .note {
   font-family: "Architects Daughter", sans-serif;
   font-size: 14pt;
-  background: transparent url(../images/note.png) 10px 0px no-repeat;
+  background: transparent url(../images/note.png) top left no-repeat;
   width: 210px;
   height: 180px;
   padding: 30px 15px 15px 25px;
 }
 
-.note-drag {
-  background: transparent url(../images/note_drag.png) 0px 0px no-repeat;
+.note .pin {
+  width: 64px;
+  height: 60px;
+  position: absolute;
+  top: 0;
+  left: 76px;
+  background-image: url(../images/pins.png);
+}
+
+.red-pin    { background-position: -128px   0px; }
+.green-pin  { background-position: -128px -69px; }
+.blue-pin   { background-position: -192px   0px; }
+.yellow-pin { background-position: -192px -69px; }
+
+.note-drag .red-pin    { background-position:   0px   0px; }
+.note-drag .green-pin  { background-position:   0px -69px; }
+.note-drag .blue-pin   { background-position: -64px   0px; }
+.note-drag .yellow-pin { background-position: -64px -69px; }
+
+.note .content {
+  position: relative;
+  z-index: 2;
 }
 
 .note textarea {

@@ -1,7 +1,18 @@
 var App = {
 
   Note: Backbone.Model.extend({
-    // TODO
+    pinColors: ['red', 'green', 'blue', 'yellow'],
+
+    initialize: function() {
+      _.bindAll(this, 'changePin');
+    },
+
+    changePin: function() {
+      var color = _.indexOf(this.pinColors, this.get('pin')) + 1;
+      if(color > this.pinColors.length-1) color = 0;
+      this.set({'pin': this.pinColors[color]});
+    },
+
   }),
 
   NoteView: Backbone.View.extend({
@@ -13,23 +24,31 @@ var App = {
     },
 
     render: function() {
+      console.log('render');
       $(this.el).css({
         left: this.model.get('left') + 'px',
         top:  this.model.get('top') + 'px'
-      }).draggable({
+      }).html(
+        this.buildPin().add(
+        $('<div/>', {'class': 'content'}))
+      ).draggable({
         start: this.dragStart,
         stop:  this.dragStop
       }).dblclick(
         this.editStart
-      ).text(
+      ).find('.content').text(
         this.model.get('content')
       );
       return this;
     },
 
+    buildPin: function() {
+      return $('<div/>', {'class': 'pin ' + this.model.get('pin') + '-pin'}).click(this.model.changePin);
+    },
+
     editStart: function(event) {
       $('<textarea/>').appendTo(
-        $(this.el).empty()
+        this.$('.content').empty()
       ).blur(
         this.editStop
       ).val(
@@ -39,8 +58,7 @@ var App = {
 
     editStop: function(event) {
       var content = this.$('textarea').val();
-      this.model.set({content: content});
-      $(this.el).empty().text(content);
+      this.model.set({content: content}); // fires change, then render()
     },
 
     dragStart: function(event, ui) {
@@ -52,7 +70,7 @@ var App = {
       this.model.set({
         left: ui.position.left,
         top:  ui.position.top
-      });
+      }, {silent: true});
     }
   })
 
@@ -68,7 +86,8 @@ $(function() {
   model = new App.Note({
     content: 'Hello World',
     left: 100,
-    top: 100
+    top: 100,
+    pin: 'red'
   });
   var view = new App.NoteView({
     model: model
