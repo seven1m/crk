@@ -7,6 +7,11 @@ App.Note = Backbone.Model.extend({
     _.bindAll(this, 'changePin');
   },
 
+  validate: function(attributes) {
+    if(attributes.left < -200) attributes.left = -200;
+    if(attributes.top  < -180) attributes.top  = -180;
+  },
+
   changePin: function() {
     var color = _.indexOf(this.pinColors, this.get('pin')) + 1;
     if(color > this.pinColors.length-1) color = 0;
@@ -71,7 +76,7 @@ App.NoteView = Backbone.View.extend({
     this.model.set({
       left: ui.position.left,
       top:  ui.position.top
-    }, {silent: true});
+    });
     this.model.save();
   }
 });
