@@ -8,22 +8,39 @@ var App = {
     className: 'note',
 
     initialize: function() {
-      _.bindAll(this, 'render', 'dragStart', 'dragStop');
+      _.bindAll(this, 'render', 'editStart', 'editStop', 'dragStart', 'dragStop');
       this.model.bind('change', this.render);
     },
 
     render: function() {
-      console.log(this.model);
       $(this.el).css({
         left: this.model.get('left') + 'px',
         top:  this.model.get('top') + 'px'
       }).draggable({
         start: this.dragStart,
         stop:  this.dragStop
-      }).text(
+      }).dblclick(
+        this.editStart
+      ).text(
         this.model.get('content')
       );
       return this;
+    },
+
+    editStart: function(event) {
+      $('<textarea/>').appendTo(
+        $(this.el).empty()
+      ).blur(
+        this.editStop
+      ).val(
+        this.model.get('content')
+      )[0].focus();
+    },
+
+    editStop: function(event) {
+      var content = this.$('textarea').val();
+      this.model.set({content: content});
+      $(this.el).empty().text(content);
     },
 
     dragStart: function(event, ui) {
@@ -32,7 +49,10 @@ var App = {
 
     dragStop: function(event, ui) {
       $(this.el).removeClass('note-drag');
-      console.log(ui.position.left, ui.position.top);
+      this.model.set({
+        left: ui.position.left,
+        top:  ui.position.top
+      });
     }
   })
 
