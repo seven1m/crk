@@ -50,13 +50,13 @@ app.get('/', function(req, res){
   });
 });
 
-app.get('/notes.json', function(req, res){
+app.get('/notes', function(req, res){
   Note.find({}, function(err, notes){
     res.send(JSON.stringify(notes));
   });
 });
 
-app.post('/notes.json', function(req, res){
+app.post('/notes', function(req, res){
   var note = new Note(req.body);
   note.save(function(err){
     if(err) res.send('error');
@@ -64,14 +64,14 @@ app.post('/notes.json', function(req, res){
   });
 });
 
-app.put('/notes/:id.json', function(req, res){
+app.put('/notes/:id', function(req, res){
   Note.update({_id: req.params.id}, req.body, {}, function(err){
     if(err) res.send('error');
     else res.send('success');
   });
 });
 
-app.delete('/notes/:id.json', function(req, res){
+app.delete('/notes/:id', function(req, res){
   var note = Note.findOne({_id: req.params.id});
   note.remove(function(err){
     if(err) res.send('error');
