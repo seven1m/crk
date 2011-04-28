@@ -1,5 +1,6 @@
 body {
-  padding: 50px;
+  padding: 0;
+  margin: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   /* http://enchantedgal-stock.deviantart.com/art/Corkboard-Wood-Cork-Composite-49823242?offset=10 */
   background: url(../images/corkboard.jpg);
