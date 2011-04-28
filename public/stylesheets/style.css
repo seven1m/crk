@@ -10,13 +10,25 @@ a {
   color: #00B7FF;
 }
 
+#board {
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-width: 100%;
+  min-height: 100%;
+}
+
 .note {
   font-family: "Architects Daughter", sans-serif;
   font-size: 14pt;
-  background: transparent url(../images/note.png) top left no-repeat;
+  background: url(../images/note.png) 0px 0px no-repeat;
   width: 210px;
   height: 180px;
   padding: 30px 15px 15px 25px;
+}
+
+.note-selected {
+  background-position: 0px -239px;
 }
 
 .note .pin {

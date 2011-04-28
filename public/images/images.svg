@@ -310,6 +310,16 @@
        fx="420"
        fy="305.93362"
        r="11.428572" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4049"
+       id="linearGradient3270"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-244.42435,26.093966)"
+       x1="456.42856"
+       y1="648.79077"
+       x2="442.14285"
+       y2="516.64789" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -318,9 +328,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.0936931"
-     inkscape:cx="533.60769"
-     inkscape:cy="681.0518"
+     inkscape:zoom="0.54689285"
+     inkscape:cx="-8.9083467"
+     inkscape:cy="585.21165"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -355,6 +365,10 @@
        orientation="1,0"
        position="410.02774,713.71009"
        id="guide3251" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="62.169399,774.37472"
+       id="guide3257" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -412,7 +426,8 @@
        id="g3169"
        inkscape:export-filename="/home/tim/p/crk/public/images/note.png"
        inkscape:export-xdpi="82.599998"
-       inkscape:export-ydpi="82.599998">
+       inkscape:export-ydpi="82.599998"
+       transform="translate(27.300085,-232.52607)">
       <path
          inkscape:export-ydpi="82.599998"
          inkscape:export-xdpi="82.599998"
@@ -751,5 +766,31 @@
          style="fill:#000000;fill-opacity:0.75;stroke:#4e4e4e;stroke-width:0;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          sodipodi:type="arc" />
     </g>
+    <path
+       inkscape:export-ydpi="82.599998"
+       inkscape:export-xdpi="82.599998"
+       inkscape:export-filename="/home/tim/p/crk/public/images/note.png"
+       style="fill:#000000;fill-opacity:0.22881356;stroke:#666666;stroke-width:0;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:0;filter:url(#filter3997)"
+       d="m 66.715119,339.01977 0,220.72309 c 0.0786,5.93168 -0.36259,6.96181 -1.01015,9.07291 l 261.119911,-2.88372 c 0.33671,-2.10421 0.16836,-6.44404 1.01015,-11.74503 L 320.76398,334.0049 c -44.01394,0.22686 -64.62696,5.6719 -99.92832,5.01487 z"
+       id="path3261"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccc" />
+    <path
+       inkscape:export-ydpi="82.599998"
+       inkscape:export-xdpi="82.599998"
+       inkscape:export-filename="/home/tim/p/crk/public/images/note.png"
+       sodipodi:nodetypes="cccccccc"
+       inkscape:connector-curvature="0"
+       id="path3263"
+       d="m 62.169399,333.96897 0,220.72309 c 0.0786,5.93168 -0.36259,6.96181 -1.01015,9.07291 l 261.624991,-9.44971 c 0.33671,-2.10421 0.67343,-4.42374 1.01015,-7.19935 l 0,-209.57551 c -37.95301,-3.30868 -72.20309,-2.9144 -107.50445,-3.57143 z"
+       style="fill:#ffdf6a;fill-opacity:1;stroke:#cc0000;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:0;stroke-dasharray:none" />
+    <path
+       inkscape:connector-curvature="0"
+       inkscape:export-ydpi="82.599998"
+       inkscape:export-xdpi="82.599998"
+       inkscape:export-filename="/home/tim/p/crk/public/images/note.png"
+       id="path3265"
+       d="m 62.169399,527.75022 0,26.9375 c 0.0786,5.93168 -0.35244,6.9514 -1,9.0625 l 261.624991,-9.4375 c 0.33671,-2.10421 0.66328,-4.41189 1,-7.1875 l 0,-19.375 -261.624991,0 z"
+       style="fill:url(#linearGradient3270);fill-opacity:1;stroke:#666666;stroke-width:0;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:0" />
   </g>
 </svg>
