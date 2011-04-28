@@ -3,7 +3,10 @@
  * Module dependencies.
  */
 
-var express = require('express');
+var express = require('express'),
+    mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
+    ObjectId = Schema.ObjectId;
 
 var app = module.exports = express.createServer();
 
@@ -26,11 +29,50 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+mongoose.connect('mongodb://localhost/crk');
+
+// Models
+
+var Note = mongoose.model('Note', new Schema({
+  content: String,
+  left:    Number,
+  top:     Number
+}));
+
 // Routes
 
 app.get('/', function(req, res){
   res.render('index', {
     title: 'Crk'
+  });
+});
+
+app.get('/notes.json', function(req, res){
+  Note.find({}, function(err, notes){
+    res.send(JSON.stringify(notes));
+  });
+});
+
+app.post('/notes.json', function(req, res){
+  var note = new Note(req.body);
+  note.save(function(err){
+    if(err) res.send('error');
+    else res.send('success');
+  });
+});
+
+app.put('/notes/:id.json', function(req, res){
+  Note.update({_id: req.params.id}, req.body, {}, function(err){
+    if(err) res.send('error');
+    else res.send('success');
+  });
+});
+
+app.delete('/notes/:id.json', function(req, res){
+  var note = Note.findOne({_id: req.params.id});
+  note.remove(function(err){
+    if(err) res.send('error');
+    else res.send('success');
   });
 });
 
