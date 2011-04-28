@@ -36,7 +36,10 @@ mongoose.connect('mongodb://localhost/crk');
 var Note = mongoose.model('Note', new Schema({
   content: String,
   left:    Number,
-  top:     Number
+  top:     Number,
+  pin:     {type:     String,
+            default:  'red',
+            enum: ['red', 'green', 'blue', 'yellow']}
 }));
 
 // Routes
