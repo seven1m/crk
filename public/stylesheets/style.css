@@ -12,8 +12,12 @@ a {
 
 .note {
   font: 1.2em "Architects Daughter", sans-serif;
-  background: transparent url(../images/note.png) top left no-repeat;
-  width: 220px;
+  background: transparent url(../images/note.png) 10px 0px no-repeat;
+  width: 210px;
   height: 280px;
-  padding: 30px 15px 15px 15px;
+  padding: 30px 15px 15px 25px;
+}
+
+.note-drag {
+  background: transparent url(../images/note_drag.png) 0px 0px no-repeat;
 }

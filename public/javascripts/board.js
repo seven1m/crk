@@ -8,7 +8,7 @@ var App = {
     className: 'note',
 
     initialize: function() {
-      _.bindAll(this, 'render', 'move');
+      _.bindAll(this, 'render', 'dragStart', 'dragStop');
       this.model.bind('change', this.render);
     },
 
@@ -18,14 +18,20 @@ var App = {
         left: this.model.get('left') + 'px',
         top:  this.model.get('top') + 'px'
       }).draggable({
-        stop: this.move
+        start: this.dragStart,
+        stop:  this.dragStop
       }).text(
         this.model.get('content')
       );
       return this;
     },
 
-    move: function(event, ui) {
+    dragStart: function(event, ui) {
+      $(this.el).addClass('note-drag');
+    },
+
+    dragStop: function(event, ui) {
+      $(this.el).removeClass('note-drag');
       console.log(ui.position.left, ui.position.top);
     }
   })
