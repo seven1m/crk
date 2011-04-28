@@ -11,6 +11,7 @@ App.Note = Backbone.Model.extend({
     var color = _.indexOf(this.pinColors, this.get('pin')) + 1;
     if(color > this.pinColors.length-1) color = 0;
     this.set({'pin': this.pinColors[color]});
+    this.save();
   },
 
 });
@@ -58,6 +59,7 @@ App.NoteView = Backbone.View.extend({
   editStop: function(event) {
     var content = this.$('textarea').val();
     this.model.set({content: content}); // fires change, then render()
+    this.model.save();
   },
 
   dragStart: function(event, ui) {
@@ -70,6 +72,7 @@ App.NoteView = Backbone.View.extend({
       left: ui.position.left,
       top:  ui.position.top
     }, {silent: true});
+    this.model.save();
   }
 });
 

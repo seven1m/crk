@@ -56,7 +56,17 @@ app.get('/', function(req, res){
 
 app.get('/notes', function(req, res){
   Note.find({}, function(err, notes){
-    res.send(JSON.stringify(notes));
+    var result = [];
+    notes.forEach(function(note) {
+      result.push({
+        id:      note._id,
+        content: note.content,
+        left:    note.left,
+        top:     note.top,
+        pin:     note.pin
+      });
+    });
+    res.send(JSON.stringify(result));
   });
 });
 
