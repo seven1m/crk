@@ -73,21 +73,23 @@ App.NoteView = Backbone.View.extend({
   }
 });
 
+App.NotesCollection = Backbone.Collection.extend({
+  model: App.Note,
+
+  url: '/notes'
+});
 
 
 // demo time:
 
-var model;
+var notes;
 
 $(function() {
-  model = new App.Note({
-    content: 'Hello World',
-    left: 100,
-    top: 100,
-    pin: 'red'
-  });
-  var view = new App.NoteView({
-    model: model
-  });
-  $('#board').append(view.render().el);
+  notes = new App.NotesCollection;
+  notes.fetch({success: function(collection){
+    collection.each(function(note) {
+      var view = new App.NoteView({model: note});
+      $('#board').append(view.render().el);
+    });
+  }});
 });
