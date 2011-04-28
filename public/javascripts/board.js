@@ -87,17 +87,26 @@ App.NotesCollection = Backbone.Collection.extend({
   url: '/notes'
 });
 
+App.BoardController = Backbone.Controller.extend({
+  routes: {
+    // nothing yet
+  },
 
-// demo time:
+  initialize: function() {
+    $('#board').empty()
+    var notes = new App.NotesCollection;
+    notes.fetch({success: function(collection){
+      collection.each(function(note) {
+        var view = new App.NoteView({model: note});
+        $('#board').append(view.render().el);
+      });
+    }});
+  }
 
-var notes;
+});
 
 $(function() {
-  notes = new App.NotesCollection;
-  notes.fetch({success: function(collection){
-    collection.each(function(note) {
-      var view = new App.NoteView({model: note});
-      $('#board').append(view.render().el);
-    });
-  }});
+  var controller = new App.BoardController;
+  Backbone.history = new Backbone.History
+  Backbone.history.start();
 });
