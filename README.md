@@ -15,9 +15,9 @@ See http://mpov.timmorgan.org/backbonejs-talk-at-tulsawebdevs-may-meeting
 
 You'll need Node.js and the following `npm` modules:
 
-* npm install express
-* npm install jade
-* npm install mongoose
+* `npm install express`
+* `npm install jade`
+* `npm install mongodb`
 
 You'll also need to have MongoDB running.
 
