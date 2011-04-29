@@ -42,7 +42,10 @@ App.NoteView = Backbone.View.extend({
       $('<div/>', {'class': 'content'}))
     ).draggable({
       start: this.dragStart,
-      stop:  this.dragStop
+      stop:  this.dragStop,
+      scroll: false,
+      stack: '.note',
+      cancel: '.content'
     }).click(
       this.select
     ).dblclick(
