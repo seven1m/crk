@@ -1,10 +1,15 @@
 # crk
 
+[![screenshot, yay!][2]][1]
+
 This is a simple cork board app with sharable post-it notes and colored pins.
 
 This was developed quickly for fun and to show off Backbone.js at the May 2011 meeting of TulsaWebDevs.
 
 See http://mpov.timmorgan.org/backbonejs-talk-at-tulsawebdevs-may-meeting
+
+[1]: http://www.flickr.com/photos/timothymorgan/5667660671/
+[2]: http://farm6.static.flickr.com/5146/5667660671_46e5ac4072.jpg
 
 ## Installation
 
