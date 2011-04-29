@@ -53,6 +53,8 @@ a {
 .note .content {
   position: relative;
   z-index: 2;
+  height: 170px;
+  overflow: auto;
 }
 
 .note textarea {

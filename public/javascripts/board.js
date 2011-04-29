@@ -19,6 +19,10 @@ App.Note = Backbone.Model.extend({
     this.save();
   },
 
+  contentHtml: function() {
+    return $('<div/>').text(this.get('content')).html().replace(/\n/g, '<br/>');
+  }
+
 });
 
 App.NoteView = Backbone.View.extend({
@@ -43,8 +47,8 @@ App.NoteView = Backbone.View.extend({
       this.select
     ).dblclick(
       this.editStart
-    ).find('.content').text(
-      this.model.get('content')
+    ).find('.content').html(
+      this.model.contentHtml()
     );
     if(this.model.get('selected')) {
       $(this.el).addClass('note-selected').scrollIntoView();
