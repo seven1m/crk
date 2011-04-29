@@ -20,7 +20,7 @@ App.Note = Backbone.Model.extend({
   },
 
   contentHtml: function() {
-    return $('<div/>').text(this.get('content')).html().replace(/\n/g, '<br/>');
+    return $('<div/>').text(this.get('content') || '').html().replace(/\n/g, '<br/>');
   }
 
 });
@@ -46,6 +46,8 @@ App.NoteView = Backbone.View.extend({
       scroll: false,
       stack: '.note',
       cancel: '.content'
+    }).css({
+      position: 'absolute'
     }).click(
       this.select
     ).dblclick(

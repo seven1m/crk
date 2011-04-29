@@ -43,6 +43,7 @@ a {
 }
 
 .note {
+  position: absolute;
   font-family: "Architects Daughter", sans-serif;
   font-size: 14pt;
   background: url(../images/note.png) 0px 0px no-repeat;
