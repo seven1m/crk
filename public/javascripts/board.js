@@ -106,6 +106,18 @@ App.NotesCollection = Backbone.Collection.extend({
 
   url: '/notes',
 
+  renderAll: function() {
+    this.each(function(note) {
+      this.render(note);
+    }, this);
+  },
+
+  render: function(note) {
+    var view = new App.NoteView({model: note});
+    $('#board').append(view.render().el);
+    return view;
+  },
+
   clearSelection: function() {
     this.each(function(note) {
       note.set({'selected': false});
@@ -117,6 +129,7 @@ App.NotesCollection = Backbone.Collection.extend({
 App.BoardController = Backbone.Controller.extend({
   routes: {
     'notes':     'index',
+    'notes/new': 'create',
     'notes/:id': 'show'
   },
 
@@ -125,10 +138,7 @@ App.BoardController = Backbone.Controller.extend({
     $('#board').empty()
     this.notes = new App.NotesCollection();
     this.notes.fetch({success: function(collection){
-      collection.each(function(note) {
-        var view = new App.NoteView({model: note});
-        $('#board').append(view.render().el);
-      });
+      collection.renderAll();
       Backbone.history.start();
     }});
     $('#board').click(function() {
@@ -144,6 +154,18 @@ App.BoardController = Backbone.Controller.extend({
     this.notes.clearSelection();
     var note = this.notes.get(id)
     if(note) note.set({'selected': true});
+  },
+
+  create: function() {
+    var html = document.getElementsByTagName('html')[0];
+    var notes = this.notes;
+    notes.create({
+      left: $('body').scrollLeft() + (html.clientWidth  / 2) - 125,
+      top:  $('body').scrollTop()  + (html.clientHeight / 2) - 125
+    }, {success: function(note) {
+      $(notes.render(note).el).dblclick();
+    }});
+    location.hash = 'notes'
   }
 
 });
