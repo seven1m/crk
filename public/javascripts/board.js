@@ -22,7 +22,6 @@ App.Note = Backbone.Model.extend({
   contentHtml: function() {
     return $('<div/>').text(this.get('content') || '').html().replace(/\n/g, '<br/>');
   }
-
 });
 
 App.NoteView = Backbone.View.extend({
@@ -123,7 +122,6 @@ App.NotesCollection = Backbone.Collection.extend({
       note.set({'selected': false});
     });
   }
-
 });
 
 App.BoardController = Backbone.Controller.extend({
@@ -167,7 +165,6 @@ App.BoardController = Backbone.Controller.extend({
     }});
     location.hash = 'notes'
   }
-
 });
 
 $(function() {
