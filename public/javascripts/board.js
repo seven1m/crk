@@ -148,4 +148,7 @@ App.BoardController = Backbone.Controller.extend({
 
 $(function() {
   var controller = new App.BoardController();
+  $('.new-note').button({
+    icons: { primary: 'ui-icon-plusthick' }
+  });
 });
