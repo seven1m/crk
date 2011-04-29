@@ -1,12 +1,9 @@
-
 /**
  * Module dependencies.
  */
 
 var express = require('express'),
-    mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    ObjectId = Schema.ObjectId;
+    mongodb = require('mongodb');
 
 var app = module.exports = express.createServer();
 
@@ -33,28 +30,17 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
-mongoose.connect('mongodb://localhost/crk');
-
-// Models
-
-var NoteSchema = new Schema({
-  content: String,
-  left:    Number,
-  top:     Number,
-  pin:     {type:     String,
-            default:  'red',
-            enum: ['red', 'green', 'blue', 'yellow']}
-})
-NoteSchema.virtual('hash').get(function() {
+function noteHash(note) {
   return {
-    id:      this._id,
-    content: this.content,
-    left:    this.left,
-    top:     this.top,
-    pin:     this.pin
+    id:      note._id,
+    content: note.content,
+    left:    note.left,
+    top:     note.top,
+    pin:     note.pin
   }
-});
-var Note = mongoose.model('Note', NoteSchema);
+}
+
+var validPinColors = ['red', 'green', 'blue', 'yellow'];
 
 // Routes
 
@@ -65,48 +51,52 @@ app.get('/', function(req, res){
 });
 
 app.get('/notes', function(req, res){
-  Note.find({}, function(err, notes){
+  notes.find({}, {}, function(err, cursor){
     var result = [];
-    notes.forEach(function(note) {
-      result.push(note.hash);
+    cursor.each(function(err, note){
+      if(note != null) result.push(noteHash(note));
+      else res.send(result);
     });
-    res.send(result);
   });
 });
 
 app.post('/notes', function(req, res){
-  var note = new Note(req.body);
-  note.save(function(err){
+  notes.insert(req.body, {safe: true}, function(err, docs){
     if(err) res.send(err, 500);
-    else res.send(note.hash);
+    else res.send(noteHash(docs[0]));
   });
 });
 
 app.put('/notes/:id', function(req, res){
-  Note.findById(req.params.id, {}, {}, function(err, note){
-    if(err) return res.send(err, 404);
-    note.content = req.body.content;
-    note.left    = req.body.left;
-    note.top     = req.body.top;
-    note.pin     = req.body.pin;
-    note.save(function(err){
-      if(err) res.send(err, 500);
-      else res.send(note);
-    });
+  var note = req.body;
+  if(validPinColors.indexOf(note.pin) == -1) note.pin = 'red';
+  console.log(note);
+  notes.update({_id: new ObjectID(req.params.id)}, note, {safe: true}, function(err, note){
+    if(err) return res.send(err, 500);
+    console.log(note);
+    res.send(noteHash(note));
   });
 });
 
 app.delete('/notes/:id', function(req, res){
-  var note = Note.findOne({_id: req.params.id});
-  note.remove(function(err){
+  notes.remove({_id: new ObjectID(req.params.id)}, function(err, result){
     if(err) res.send(err, 500);
     else res.send('success');
   });
 });
 
-// Only listen on $ node app.js
+// setup connections
 
-if (!module.parent) {
-  app.listen(3000);
-  console.log("Express server listening on port %d", app.address().port);
-}
+var db = new mongodb.Db('crk', new mongodb.Server('localhost', 27017, {}));
+
+var notes, ObjectID;
+
+db.open(function(err, client){
+  ObjectID = client.bson_serializer.ObjectID;
+  client.collection('notes', function(err, collection) {
+    notes = collection;
+    app.listen(3000);
+    console.log("Express server listening on port %d", app.address().port);
+  })
+});
+
