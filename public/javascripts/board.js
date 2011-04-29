@@ -46,7 +46,9 @@ App.NoteView = Backbone.View.extend({
     ).find('.content').text(
       this.model.get('content')
     );
-    if(this.model.get('selected')) $(this.el).addClass('note-selected');
+    if(this.model.get('selected')) {
+      $(this.el).addClass('note-selected').scrollIntoView();
+    }
     else $(this.el).removeClass('note-selected');
     return this;
   },
@@ -105,7 +107,7 @@ App.NotesCollection = Backbone.Collection.extend({
 
 App.BoardController = Backbone.Controller.extend({
   routes: {
-    '':          'index',
+    'notes':     'index',
     'notes/:id': 'show'
   },
 
@@ -121,7 +123,7 @@ App.BoardController = Backbone.Controller.extend({
       Backbone.history.start();
     }});
     $('#board').click(function() {
-      location.hash = '';
+      location.hash = 'notes';
     });
   },
 
