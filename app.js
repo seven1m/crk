@@ -37,14 +37,24 @@ mongoose.connect('mongodb://localhost/crk');
 
 // Models
 
-var Note = mongoose.model('Note', new Schema({
+var NoteSchema = new Schema({
   content: String,
   left:    Number,
   top:     Number,
   pin:     {type:     String,
             default:  'red',
             enum: ['red', 'green', 'blue', 'yellow']}
-}));
+})
+NoteSchema.virtual('hash').get(function() {
+  return {
+    id:      this._id,
+    content: this.content,
+    left:    this.left,
+    top:     this.top,
+    pin:     this.pin
+  }
+});
+var Note = mongoose.model('Note', NoteSchema);
 
 // Routes
 
@@ -58,37 +68,38 @@ app.get('/notes', function(req, res){
   Note.find({}, function(err, notes){
     var result = [];
     notes.forEach(function(note) {
-      result.push({
-        id:      note._id,
-        content: note.content,
-        left:    note.left,
-        top:     note.top,
-        pin:     note.pin
-      });
+      result.push(note.hash);
     });
-    res.send(JSON.stringify(result));
+    res.send(result);
   });
 });
 
 app.post('/notes', function(req, res){
   var note = new Note(req.body);
   note.save(function(err){
-    if(err) res.send('error');
-    else res.send('success');
+    if(err) res.send(err, 500);
+    else res.send(note.hash);
   });
 });
 
 app.put('/notes/:id', function(req, res){
-  Note.update({_id: req.params.id}, req.body, {}, function(err){
-    if(err) res.send('error');
-    else res.send('success');
+  Note.findById(req.params.id, {}, {}, function(err, note){
+    if(err) return res.send(err, 404);
+    note.content = req.body.content;
+    note.left    = req.body.left;
+    note.top     = req.body.top;
+    note.pin     = req.body.pin;
+    note.save(function(err){
+      if(err) res.send(err, 500);
+      else res.send(note);
+    });
   });
 });
 
 app.delete('/notes/:id', function(req, res){
   var note = Note.findOne({_id: req.params.id});
   note.remove(function(err){
-    if(err) res.send('error');
+    if(err) res.send(err, 500);
     else res.send('success');
   });
 });
