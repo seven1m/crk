@@ -30,7 +30,8 @@ You'll need Node.js and the following modules (install with npm):
 
 * express
 * jade
-* mongodb (node-mongodb-native)
+* socket.io
+* mongodb@0.9.3 (node-mongodb-native, 0.9.4 has a bug)
 
 You'll also need to have MongoDB running.
 
@@ -42,9 +43,9 @@ To run in development mode:
 
 Modifying a file should restart the app automatically.
 
-## Testing
+## Supported Browsers
 
-I have only tested this on Chrome 11 and Firefox 4. If you find issues with other browsers, let me know.
+Should work with any modern browser, but I have only tested this on Chrome 11 and Firefox 4.
 
 ## Author
 
