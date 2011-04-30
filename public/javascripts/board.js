@@ -3,8 +3,16 @@ var App = {};
 App.Note = Backbone.Model.extend({
   pinColors: ['red', 'green', 'blue', 'yellow'],
 
-  initialize: function() {
+  initialize: function(attributes) {
     _.bindAll(this, 'changePin');
+    var html = document.getElementsByTagName('html')[0];
+    var defaults = {
+      left: $('body').scrollLeft() + (html.clientWidth  / 2) - 125,
+      top:  $('body').scrollTop()  + (html.clientHeight / 2) - 125,
+      pin: 'red',
+      client: App.clientId
+    }
+    this.set(_.extend(defaults, attributes));
   },
 
   validate: function(attributes) {
@@ -108,6 +116,11 @@ App.NotesCollection = Backbone.Collection.extend({
 
   url: '/notes',
 
+  initialize: function(models) {
+    _.bindAll(this, 'render', 'renderAll');
+    this.bind('refresh', this.renderAll).bind('add', this.render);
+  },
+
   renderAll: function() {
     this.each(function(note) {
       this.render(note);
@@ -140,7 +153,6 @@ App.BoardController = Backbone.Controller.extend({
     $('#board').empty()
     this.notes = new App.NotesCollection();
     this.notes.fetch({success: function(collection){
-      collection.renderAll();
       Backbone.history.start();
     }});
     $('#board').click(function() {
@@ -159,14 +171,8 @@ App.BoardController = Backbone.Controller.extend({
   },
 
   create: function() {
-    var html = document.getElementsByTagName('html')[0];
     var notes = this.notes;
-    notes.create({
-      left: $('body').scrollLeft() + (html.clientWidth  / 2) - 125,
-      top:  $('body').scrollTop()  + (html.clientHeight / 2) - 125
-    }, {success: function(note) {
-      $(notes.render(note).el).dblclick();
-    }});
+    notes.create({});
     location.hash = 'notes';
   },
 
@@ -176,8 +182,36 @@ App.BoardController = Backbone.Controller.extend({
   }
 });
 
+App.clientId = null;
+
+function setupSocket(controller) {
+  var socket = new io.Socket();
+  socket.connect();
+  socket.on('connect', function() {
+    App.clientId = socket.transport.sessionid;
+  });
+  var notes = controller.notes;
+  socket.on('message', function(msg) {
+    if(msg.data.client == App.clientId) return;
+    switch(msg.action) {
+      case 'create':
+        notes.add(new App.Note(msg.data));
+        break;
+      case 'update':
+        notes.get(msg.data.id).set(msg.data);
+        break;
+      case 'delete':
+        notes.remove(notes.get(msg.data.id))
+        break;
+    }
+  });
+};
+
+var controller;
+
 $(function() {
-  var controller = new App.BoardController();
+  controller = new App.BoardController();
+  setupSocket(controller);
   $('.new-note').button({
     icons: { primary: 'ui-icon-plusthick' }
   });

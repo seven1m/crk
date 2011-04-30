@@ -3,7 +3,8 @@
  */
 
 var express = require('express'),
-    mongodb = require('mongodb');
+    mongodb = require('mongodb'),
+    io = require('socket.io');
 
 var app = module.exports = express.createServer();
 
@@ -36,7 +37,8 @@ function noteHash(note) {
     content: note.content,
     left:    note.left,
     top:     note.top,
-    pin:     note.pin
+    pin:     note.pin,
+    client:  note.client
   }
 }
 
@@ -63,25 +65,33 @@ app.get('/notes', function(req, res){
 app.post('/notes', function(req, res){
   notes.insert(req.body, {safe: true}, function(err, docs){
     if(err) res.send(err, 500);
-    else res.send(noteHash(docs[0]));
+    else {
+      var note = noteHash(docs[0]);
+      socket.broadcast({action: 'create', data: note});
+      res.send(note);
+    }
   });
 });
 
 app.put('/notes/:id', function(req, res){
   var note = req.body;
   if(validPinColors.indexOf(note.pin) == -1) note.pin = 'red';
-  console.log(note);
   notes.update({_id: new ObjectID(req.params.id)}, note, {safe: true}, function(err, note){
-    if(err) return res.send(err, 500);
-    console.log(note);
-    res.send(noteHash(note));
+    if(err) res.send(err, 500);
+    else {
+      socket.broadcast({action: 'update', data: note});
+      res.send(noteHash(note));
+    }
   });
 });
 
 app.delete('/notes/:id', function(req, res){
   notes.remove({_id: new ObjectID(req.params.id)}, function(err, result){
     if(err) res.send(err, 500);
-    else res.send({success: true});
+    else {
+      socket.broadcast({action: 'delete', data: {id: req.params.id}});
+      res.send({success: true});
+    }
   });
 });
 
@@ -89,13 +99,14 @@ app.delete('/notes/:id', function(req, res){
 
 var db = new mongodb.Db('crk', new mongodb.Server('localhost', 27017, {}));
 
-var notes, ObjectID;
+var socket, notes, ObjectID;
 
 db.open(function(err, client){
   ObjectID = client.bson_serializer.ObjectID;
   client.collection('notes', function(err, collection) {
     notes = collection;
     app.listen(3000);
+    socket = io.listen(app);
     console.log("Express server listening on port %d", app.address().port);
   })
 });
