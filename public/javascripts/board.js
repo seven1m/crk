@@ -151,6 +151,11 @@ App.WorkspaceView = Backbone.View.extend({
     $(window).resize(this.render).scroll(this.render);
     this.slider = $('<div/>', {'class': 'work-area'});
     $(this.el).append(this.slider);
+    controller.notes
+      .bind('add', this.render)
+      .bind('change', this.render)
+      .bind('remove', this.render)
+      .bind('refresh', this.render);
   },
 
   render: function() {
@@ -176,11 +181,14 @@ App.WorkspaceView = Backbone.View.extend({
         top:  note.get('top')  * this.scaleFactor
       });
     }, this);
+    for(var i=controller.notes.length; i<tns.length; i++) {
+      tns.eq(i).remove();
+    }
     return this;
   },
 
   setScroll: function(event, ui) {
-    console.log(ui.position.left / this.scaleFactor, ui.position.top / this.scaleFactor);
+    console.log(ui.position.left / this.scaleFactor + 1, ui.position.top / this.scaleFactor + 1);
     App.window.scroll(ui.position.left / this.scaleFactor + 1, ui.position.top / this.scaleFactor + 1);
   }
 });
