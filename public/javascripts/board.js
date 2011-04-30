@@ -2,18 +2,16 @@ var App = {};
 
 App.Note = Backbone.Model.extend({
   pinColors: ['red', 'green', 'blue', 'yellow'],
-  types: ['note', 'big-note'],
 
   initialize: function(attributes) {
-    _.bindAll(this, 'changePin', 'changeType');
+    _.bindAll(this, 'changePin');
     var html = document.getElementsByTagName('html')[0];
     var wsize = App.window.size();
     var defaults = {
-      left:   App.window.scroll().x + (wsize.width  / 2) - 125,
-      top:    App.window.scroll().y + (wsize.height / 2) - 125,
-      pin:    'red',
-      client: App.clientId,
-      type:   'note'
+      left: App.window.scroll().x + (wsize.width  / 2) - 125,
+      top:  App.window.scroll().y + (wsize.height / 2) - 125,
+      pin: 'red',
+      client: App.clientId
     }
     this.set(_.extend(defaults, attributes));
   },
@@ -27,13 +25,6 @@ App.Note = Backbone.Model.extend({
     var color = _.indexOf(this.pinColors, this.get('pin')) + 1;
     if(color > this.pinColors.length-1) color = 0;
     this.set({'pin': this.pinColors[color], client: App.clientId});
-    this.save();
-  },
-
-  changeType: function() {
-    var type = _.indexOf(this.types, this.get('type') || 'note') + 1;
-    if(type > this.types.length-1) type = 'note';
-    this.set({'type': this.types[type], client: App.clientId});
     this.save();
   },
 
@@ -57,10 +48,7 @@ App.NoteView = Backbone.View.extend({
       top:  this.model.get('top') + 'px'
     }).html(
       this.buildPin().add(
-        $('<div/>', {'class': 'content'})
-      ).add(
-        $('<div/>', {'class': 'sizer'}).click(this.model.changeType)
-      )
+      $('<div/>', {'class': 'content'}))
     ).draggable({
       start: this.dragStart,
       stop:  this.dragStop,
@@ -82,11 +70,6 @@ App.NoteView = Backbone.View.extend({
     } else {
       $(this.el).removeClass('note-selected');
       $('.delete-note').hide();
-    }
-    if(this.model.get('type') == 'big-note') {
-      $(this.el).addClass('big-note');
-    } else {
-      $(this.el).removeClass('big-note');
     }
     return this;
   },

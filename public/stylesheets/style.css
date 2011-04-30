@@ -66,20 +66,6 @@ a {
   background-image: url(../images/pins.png);
 }
 
-.big-note {
-  background: url(../images/big-note.png) 0px 0px no-repeat;
-  width: 460px;
-  height: 405px;
-}
-
-.big-note.note-selected {
-  background-position: 0px -475px;
-}
-
-.big-note .pin {
-  left: 200px;
-}
-
 .red-pin    { background-position: -128px   0px; }
 .green-pin  { background-position: -128px -69px; }
 .blue-pin   { background-position: -192px   0px; }
@@ -106,39 +92,15 @@ a {
   padding-left: 20px;
 }
 
-.note .sizer {
-  position: absolute;
-  right: 10px;
-  bottom: 20px;
-  background: url(../images/sizer.png) top left no-repeat;
-  width: 15px;
-  height: 13px;
-}
-
-.big-note .sizer {
-  right: 20px;
-  bottom: 42px;
-}
-
 .note textarea {
   border: none;
   background: transparent;
   margin: 0;
   padding: 0;
-  width: 200px;
+  width: 210px;
   height: 170px;
   font-family: "Architects Daughter", sans-serif;
   font-size: 14pt;
-}
-
-.big-note .content {
-  width: 450px;
-  height: 370px;
-}
-
-.big-note textarea {
-  width: 435px;
-  height: 500px;
 }
 
 .workspace {
