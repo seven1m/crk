@@ -1,23 +1,36 @@
-# crk
+# Crk
 
 [![screenshot, yay!][2]][1]
 
 This is a simple cork board app with sharable post-it notes and colored pins.
 
-This was developed quickly for fun and to show off Backbone.js at the May 2011 meeting of TulsaWebDevs.
+Changes are reflected on all connected clients in near real time via [Socket.IO][3].
 
-See http://mpov.timmorgan.org/backbonejs-talk-at-tulsawebdevs-may-meeting
+This was developed quickly for fun and to show off [Backbone.js][4] at the May 2011 meeting of [TulsaWebDevs][5].
 
 [1]: http://www.flickr.com/photos/timothymorgan/5667660671/
 [2]: http://farm6.static.flickr.com/5146/5667660671_46e5ac4072.jpg
+[3]: http://socket.io
+[4]: http://documentcloud.github.com/backbone/
+[5]: http://www.facebook.com/group.php?gid=199713962534
+
+## Features / Usage
+
+* Click **New** to create a new note.
+* Double-click a note to edit it.
+* Single-click a note to get its unique url and center it on the screen.
+* Click a note's outside edge to drag and move it.
+* Click the push pin to change it's color. Clicking will cycle through red, green, blue, and yellow.
+* Click and drag the outline in the workspace preview in the lower-right in order to scroll quickly.
+* Select a note (a red outline will appear) and click the **Delete** button to delete it permanently.
 
 ## Installation
 
-You'll need Node.js and the following `npm` modules:
+You'll need Node.js and the following modules (install with npm):
 
-* `npm install express`
-* `npm install jade`
-* `npm install mongodb`
+* express
+* jade
+* mongodb (node-mongodb-native)
 
 You'll also need to have MongoDB running.
 
@@ -31,7 +44,7 @@ Modifying a file should restart the app automatically.
 
 ## Testing
 
-I have only tested this on Chrome 11. If you find issues with other browsers, let me know.
+I have only tested this on Chrome 11 and Firefox 4. If you find issues with other browsers, let me know.
 
 ## Author
 
