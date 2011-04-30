@@ -33,16 +33,18 @@ app.configure('production', function(){
 
 function noteHash(note) {
   return {
-    id:      note._id,
+    id:      note._id || note.id,
     content: note.content,
     left:    note.left,
     top:     note.top,
     pin:     note.pin,
+    type:    note.type,
     client:  note.client
   }
 }
 
 var validPinColors = ['red', 'green', 'blue', 'yellow'];
+var validTypes     = ['note', 'big-note'];
 
 // Routes
 
@@ -63,7 +65,10 @@ app.get('/notes', function(req, res){
 });
 
 app.post('/notes', function(req, res){
-  notes.insert(req.body, {safe: true}, function(err, docs){
+  var note = req.body;
+  if(validPinColors.indexOf(note.pin) == -1) note.pin = 'red';
+  if(validTypes.indexOf(note.type) == -1) note.type = 'note';
+  notes.insert(note, {safe: true}, function(err, docs){
     if(err) res.send(err, 500);
     else {
       var note = noteHash(docs[0]);
@@ -76,11 +81,13 @@ app.post('/notes', function(req, res){
 app.put('/notes/:id', function(req, res){
   var note = req.body;
   if(validPinColors.indexOf(note.pin) == -1) note.pin = 'red';
-  notes.update({_id: new ObjectID(req.params.id)}, note, {safe: true}, function(err, note){
+  if(validTypes.indexOf(note.type) == -1) note.type = 'note';
+  notes.update({_id: new ObjectID(req.params.id)}, note, {safe: true}, function(err, doc){
     if(err) res.send(err, 500);
     else {
+      var note = noteHash(doc);
       socket.broadcast({action: 'update', data: note});
-      res.send(noteHash(note));
+      res.send(note);
     }
   });
 });

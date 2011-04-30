@@ -22,6 +22,7 @@ This was developed quickly for fun and to show off [Backbone.js][4] at the May 2
 * Click a note's outside edge to drag and move it.
 * Click the push pin to change it's color. Clicking will cycle through red, green, blue, and yellow.
 * Click and drag the outline in the workspace preview in the lower-right in order to scroll quickly.
+* Click the triangle in the lower-right corner of a note to change note size (two sizes).
 * Select a note (a red outline will appear) and click the **Delete** button to delete it permanently.
 
 ## Installation
@@ -30,7 +31,8 @@ You'll need Node.js and the following modules (install with npm):
 
 * express
 * jade
-* mongodb (node-mongodb-native)
+* socket.io
+* mongodb@0.9.3 (node-mongodb-native, version 0.9.4 seems to have a bug)
 
 You'll also need to have MongoDB running.
 
