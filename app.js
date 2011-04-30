@@ -81,7 +81,7 @@ app.put('/notes/:id', function(req, res){
 app.delete('/notes/:id', function(req, res){
   notes.remove({_id: new ObjectID(req.params.id)}, function(err, result){
     if(err) res.send(err, 500);
-    else res.send('success');
+    else res.send({success: true});
   });
 });
 

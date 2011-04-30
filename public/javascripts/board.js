@@ -28,8 +28,8 @@ App.NoteView = Backbone.View.extend({
   className: 'note',
 
   initialize: function() {
-    _.bindAll(this, 'render', 'select', 'editStart', 'editStop', 'dragStart', 'dragStop');
-    this.model.bind('change', this.render);
+    _.bindAll(this, 'render', 'select', 'editStart', 'editStop', 'dragStart', 'dragStop', 'remove');
+    this.model.bind('change', this.render).bind('remove', this.remove);
   },
 
   render: function() {
@@ -56,8 +56,11 @@ App.NoteView = Backbone.View.extend({
     );
     if(this.model.get('selected')) {
       $(this.el).addClass('note-selected').scrollIntoView();
+      $('.delete-note').show().attr('href', '#notes/' + this.model.id + '/delete');
+    } else {
+      $(this.el).removeClass('note-selected');
+      $('.delete-note').hide();
     }
-    else $(this.el).removeClass('note-selected');
     return this;
   },
 
@@ -126,9 +129,10 @@ App.NotesCollection = Backbone.Collection.extend({
 
 App.BoardController = Backbone.Controller.extend({
   routes: {
-    'notes':     'index',
-    'notes/new': 'create',
-    'notes/:id': 'show'
+    'notes':            'index',
+    'notes/new':        'create',
+    'notes/:id/delete': 'delete',
+    'notes/:id':        'show'
   },
 
   initialize: function() {
@@ -163,7 +167,12 @@ App.BoardController = Backbone.Controller.extend({
     }, {success: function(note) {
       $(notes.render(note).el).dblclick();
     }});
-    location.hash = 'notes'
+    location.hash = 'notes';
+  },
+
+  delete: function(id) {
+    this.notes.get(id).destroy();
+    location.hash = 'notes';
   }
 });
 
@@ -172,4 +181,7 @@ $(function() {
   $('.new-note').button({
     icons: { primary: 'ui-icon-plusthick' }
   });
+  $('.delete-note').button({
+    icons: { primary: 'ui-icon-closethick' }
+  }).hide();
 });
