@@ -6,10 +6,10 @@ App.Note = Backbone.Model.extend({
   initialize: function(attributes) {
     _.bindAll(this, 'changePin');
     var html = document.getElementsByTagName('html')[0];
-    var wsize = App.windowSize();
+    var wsize = App.window.size();
     var defaults = {
-      left: $('body').scrollLeft() + (wsize.width  / 2) - 125,
-      top:  $('body').scrollTop()  + (wsize.height / 2) - 125,
+      left: App.window.scroll().x + (wsize.width  / 2) - 125,
+      top:  App.window.scroll().y + (wsize.height / 2) - 125,
       pin: 'red',
       client: App.clientId
     }
@@ -153,13 +153,11 @@ App.WorkspaceView = Backbone.View.extend({
   },
 
   render: function() {
-    var wsize = App.windowSize(),
-        body = $('body');
-    var x = body.scrollLeft(),
-        y = body.scrollTop();
+    var wsize = App.window.size();
+    var scroll = App.window.scroll();
     this.slider.css({
-      left:   x * this.scaleFactor,
-      top:    y * this.scaleFactor,
+      left:   scroll.x * this.scaleFactor,
+      top:    scroll.y * this.scaleFactor,
       width:  wsize.width  * this.scaleFactor,
       height: wsize.height * this.scaleFactor
     }).draggable({
@@ -181,7 +179,8 @@ App.WorkspaceView = Backbone.View.extend({
   },
 
   setScroll: function(event, ui) {
-    App.setScroll(ui.position.left / this.scaleFactor, ui.position.top / this.scaleFactor);
+    console.log(ui.position.left / this.scaleFactor, ui.position.top / this.scaleFactor);
+    App.window.scroll(ui.position.left / this.scaleFactor + 1, ui.position.top / this.scaleFactor + 1);
   }
 });
 
@@ -254,13 +253,21 @@ App.setupSocket = function(controller) {
   });
 };
 
-App.windowSize = function() {
-  var html = document.getElementsByTagName('html')[0];
-  return {width: html.clientWidth, height: html.clientHeight};
-};
-
-App.setScroll = function(left, top) {
-  $('body').scrollLeft(left).scrollTop(top);
+App.window = {
+  size: function() {
+    var html = document.getElementsByTagName('html')[0];
+    return {width: html.clientWidth, height: html.clientHeight};
+  },
+  scroll: function(x, y) {
+    if(x && y) {
+      $(window).scrollLeft(x).scrollTop(y);
+    } else {
+      return {
+        x: $(window).scrollLeft(),
+        y: $(window).scrollTop()
+      };
+    }
+  }
 };
 
 var controller;
