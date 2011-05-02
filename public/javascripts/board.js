@@ -40,7 +40,7 @@ App.NoteView = Backbone.View.extend({
     }).css({
       position: 'absolute'
     }).find('.content').html(
-      this.model.get('content')
+      this.model.escape('content')
     );
     if(this.model.get('selected')) {
       $(this.el).addClass('note-selected').scrollIntoView();
