@@ -1,35 +1,12 @@
 var App = {};
 
 App.Note = Backbone.Model.extend({
-  pinColors: ['red', 'green', 'blue', 'yellow'],
-
   initialize: function(attributes) {
-    _.bindAll(this, 'changePin');
-    var wsize = App.window.size();
     var defaults = {
-      left: App.window.scroll().x + (wsize.width  / 2) - 125,
-      top:  App.window.scroll().y + (wsize.height / 2) - 125,
-      pin: 'red',
-      client: App.clientId
+      left: App.window.scroll().x + (App.window.size().width  / 2) - 125,
+      top:  App.window.scroll().y + (App.window.size().height / 2) - 125
     }
     this.set(_.extend(defaults, attributes));
-  },
-
-  validate: function(attributes) {
-    if(attributes.left < -200) attributes.left = -200;
-    if(attributes.top  < -180) attributes.top  = -180;
-  },
-
-  changePin: function() {
-    var color = _.indexOf(this.pinColors, this.get('pin')) + 1;
-    if(color > this.pinColors.length-1) color = 0;
-    this.set({'pin': this.pinColors[color], client: App.clientId});
-    this.save();
-  },
-
-  contentHtml: function() {
-    var converter = new Showdown.converter();
-    return converter.makeHtml($('<div/>').text(this.get('content') || '').html());
   }
 });
 
@@ -61,7 +38,7 @@ App.NoteView = Backbone.View.extend({
     ).dblclick(
       this.editStart
     ).find('.content').html(
-      this.model.contentHtml()
+      this.model.get('content')
     );
     if(this.model.get('selected')) {
       $(this.el).addClass('note-selected').scrollIntoView();
@@ -74,7 +51,7 @@ App.NoteView = Backbone.View.extend({
   },
 
   buildPin: function() {
-    return $('<div/>', {'class': 'pin ' + this.model.get('pin') + '-pin'}).click(this.model.changePin);
+    return $('<div/>', {'class': 'pin red-pin'});
   },
 
   select: function(event) {
@@ -94,7 +71,7 @@ App.NoteView = Backbone.View.extend({
 
   editStop: function(event) {
     var content = this.$('textarea').val();
-    this.model.set({content: content, client: App.clientId}); // fires change, then render()
+    this.model.set({content: content}); // fires change, then render()
     this.model.save();
   },
 
@@ -106,8 +83,7 @@ App.NoteView = Backbone.View.extend({
     $(this.el).removeClass('note-drag');
     this.model.set({
       left: ui.position.left,
-      top:  ui.position.top,
-      client: App.clientId
+      top:  ui.position.top
     });
     this.model.save();
   }
@@ -142,57 +118,6 @@ App.NotesCollection = Backbone.Collection.extend({
   }
 });
 
-App.WorkspaceView = Backbone.View.extend({
-  className: 'workspace',
-  scaleFactor: 0.03,
-
-  initialize: function() {
-    _.bindAll(this, 'render', 'setScroll');
-    $(window).resize(this.render).scroll(this.render);
-    this.slider = $('<div/>', {'class': 'work-area'});
-    $(this.el).append(this.slider);
-    controller.notes
-      .bind('add', this.render)
-      .bind('change', this.render)
-      .bind('remove', this.render)
-      .bind('refresh', this.render);
-  },
-
-  render: function() {
-    var wsize = App.window.size();
-    var scroll = App.window.scroll();
-    this.slider.css({
-      left:   scroll.x * this.scaleFactor,
-      top:    scroll.y * this.scaleFactor,
-      width:  wsize.width  * this.scaleFactor,
-      height: wsize.height * this.scaleFactor
-    }).draggable({
-      containment: 'parent',
-      scroll:      false,
-      stop:        this.setScroll
-    });
-    var tns = this.$('.note-thumbnail');
-    controller.notes.each(function(note, index) {
-      var tn = tns.eq(index);
-      if(tn.length == 0)
-        tn = $('<div/>', {'class': 'note-thumbnail'}).appendTo(this.el);
-      tn.css({
-        left: note.get('left') * this.scaleFactor,
-        top:  note.get('top')  * this.scaleFactor
-      });
-    }, this);
-    for(var i=controller.notes.length; i<tns.length; i++) {
-      tns.eq(i).remove();
-    }
-    return this;
-  },
-
-  setScroll: function(event, ui) {
-    console.log(ui.position.left / this.scaleFactor + 1, ui.position.top / this.scaleFactor + 1);
-    App.window.scroll(ui.position.left / this.scaleFactor + 1, ui.position.top / this.scaleFactor + 1);
-  }
-});
-
 App.BoardController = Backbone.Controller.extend({
   routes: {
     'notes':            'index',
@@ -202,13 +127,10 @@ App.BoardController = Backbone.Controller.extend({
   },
 
   initialize: function() {
-    _.bindAll(this, 'show');
     $('#board').empty()
     this.notes = new App.NotesCollection();
     this.notes.fetch({success: function(collection){
       Backbone.history.start();
-      var workspace = new App.WorkspaceView()
-      $('body').append(workspace.render().el);
     }});
     $('#board').click(function() {
       location.hash = 'notes';
@@ -237,31 +159,6 @@ App.BoardController = Backbone.Controller.extend({
   }
 });
 
-App.clientId = null;
-
-App.setupSocket = function(controller) {
-  var socket = new io.Socket();
-  socket.connect();
-  socket.on('connect', function() {
-    App.clientId = socket.transport.sessionid;
-  });
-  var notes = controller.notes;
-  socket.on('message', function(msg) {
-    if(msg.data.client == App.clientId) return;
-    switch(msg.action) {
-      case 'create':
-        notes.add(new App.Note(msg.data));
-        break;
-      case 'update':
-        notes.get(msg.data.id).set(msg.data);
-        break;
-      case 'delete':
-        notes.remove(notes.get(msg.data.id))
-        break;
-    }
-  });
-};
-
 App.window = {
   size: function() {
     var html = document.getElementsByTagName('html')[0];
@@ -283,7 +180,6 @@ var controller;
 
 $(function() {
   controller = new App.BoardController();
-  App.setupSocket(controller);
   $('.new-note').button({
     icons: { primary: 'ui-icon-plusthick' }
   });
