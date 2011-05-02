@@ -54,7 +54,7 @@ App.NoteView = Backbone.View.extend({
       stop:  this.dragStop,
       scroll: false,
       stack: '.note',
-      cancel: '.content'
+      cancel: '.content, textarea'
     }).css({
       position: 'absolute'
     }).click(
