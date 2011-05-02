@@ -29,7 +29,7 @@ App.Note = Backbone.Model.extend({
 
   contentHtml: function() {
     var converter = new Showdown.converter();
-    return converter.makeHtml($('<div/>').text(this.get('content') || '').html());
+    return converter.makeHtml(this.escape('content') || '');
   }
 });
 
