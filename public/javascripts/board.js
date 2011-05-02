@@ -5,7 +5,6 @@ App.Note = Backbone.Model.extend({
 
   initialize: function(attributes) {
     _.bindAll(this, 'changePin');
-    var html = document.getElementsByTagName('html')[0];
     var wsize = App.window.size();
     var defaults = {
       left: App.window.scroll().x + (wsize.width  / 2) - 125,
