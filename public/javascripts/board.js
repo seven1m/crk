@@ -13,6 +13,12 @@ App.Note = Backbone.Model.extend({
 App.NoteView = Backbone.View.extend({
   className: 'note',
 
+  events: {
+    'click':         'select',
+    'dblclick':      'editStart',
+    'blur textarea': 'editStop'
+  },
+
   initialize: function() {
     _.bindAll(this, 'render', 'select', 'editStart', 'editStop', 'dragStart', 'dragStop', 'remove');
     this.model.bind('change', this.render).bind('remove', this.remove);
@@ -33,11 +39,7 @@ App.NoteView = Backbone.View.extend({
       cancel: '.content, textarea'
     }).css({
       position: 'absolute'
-    }).click(
-      this.select
-    ).dblclick(
-      this.editStart
-    ).find('.content').html(
+    }).find('.content').html(
       this.model.get('content')
     );
     if(this.model.get('selected')) {
@@ -62,8 +64,6 @@ App.NoteView = Backbone.View.extend({
   editStart: function(event) {
     $('<textarea/>').appendTo(
       this.$('.content').empty()
-    ).blur(
-      this.editStop
     ).val(
       this.model.get('content')
     )[0].focus();
