@@ -102,8 +102,10 @@ var db = new mongodb.Db('crk', new mongodb.Server('localhost', 27017, {}));
 var socket, notes, ObjectID;
 
 db.open(function(err, client){
+  if(err) throw err;
   ObjectID = client.bson_serializer.ObjectID;
   client.collection('notes', function(err, collection) {
+    if(err) throw err;
     notes = collection;
     app.listen(3000);
     socket = io.listen(app);
