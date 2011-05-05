@@ -107,9 +107,9 @@ db.open(function(err, client){
   client.collection('notes', function(err, collection) {
     if(err) throw err;
     notes = collection;
-    app.listen(3000);
-    socket = io.listen(app);
-    console.log("Express server listening on port %d", app.address().port);
   })
 });
 
+app.listen(3000);
+socket = io.listen(app);
+console.log("Express server listening on port %d", app.address().port);
