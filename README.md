@@ -39,7 +39,7 @@ You'll also need to have MongoDB running.
 
 To run in development mode:
 
-    node d.js app.js
+    node d.js server.js
 
 Modifying a file should restart the app automatically.
 
