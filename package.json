@@ -1,0 +1,20 @@
+{
+    "name": "crk"
+  , "version": "0.1.1"
+  , "author": "Tim Morgan <tim@timmorgan.org>"
+  , "description": "a simple cork board app with sharable post-it notes and colored pins"
+  , "repository": {
+      "type": "git"
+    , "url": "https://github.com/seven1m/crk.git"
+  }
+  , "license": "MIT"
+  , "engine": {
+      "node": "*"
+  }
+  , "dependencies": {
+      "express": "2.5.x"
+    , "jade": "latest"
+    , "socket.io": "0.9.x"
+    , "mongodb": "0.9.x"
+  }
+}
