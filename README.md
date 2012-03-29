@@ -26,26 +26,15 @@ This was developed quickly for fun and to show off [Backbone.js][4] at the May 2
 
 ## Installation
 
-You'll need Node.js and the following modules (install with npm):
+Install Node.js and MongoDB on your platform, then install the npm modules like so:
 
-* express
-* jade
-* socket.io
-* mongodb@0.9.3 (node-mongodb-native, 0.9.4 has a bug)
-
-You'll also need to have MongoDB running.
+    npm install
 
 ## Running
 
-To run in development mode:
+To run:
 
-    node d.js server.js
-
-Modifying a file should restart the app automatically.
-
-## Supported Browsers
-
-Should work with any modern browser, but I have only tested this on Chrome 11 and Firefox 4.
+    node server.js
 
 ## Author
 
@@ -53,7 +42,7 @@ Tim Morgan [@seven1m](http://twitter.com/seven1m) | [timmorgan.org](http://timmo
 
 ## Copyright
 
-Copyright (c) 2011, Tim Morgan
+Copyright (c) 2012, Tim Morgan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
