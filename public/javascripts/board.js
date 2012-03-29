@@ -240,25 +240,29 @@ App.BoardController = Backbone.Controller.extend({
 App.clientId = null;
 
 App.setupSocket = function(controller) {
-  var socket = new io.Socket();
-  socket.connect();
-  socket.on('connect', function() {
-    App.clientId = socket.transport.sessionid;
-  });
   var notes = controller.notes;
-  socket.on('message', function(msg) {
-    if(msg.data.client == App.clientId) return;
-    switch(msg.action) {
-      case 'create':
-        notes.add(new App.Note(msg.data));
-        break;
-      case 'update':
-        notes.get(msg.data.id).set(msg.data);
-        break;
-      case 'delete':
-        notes.remove(notes.get(msg.data.id))
-        break;
-    }
+
+  var socket = io.connect();
+  socket.on('connect', function() {
+    App.clientId = socket.socket.sessionid;
+  });
+
+  socket.on('create', function(data) {
+    console.log('create', data)
+    if(data.client == App.clientId) return;
+    notes.add(new App.Note(data));
+  });
+
+  socket.on('update', function(data) {
+    console.log('update', data)
+    if(data.client == App.clientId) return;
+    notes.get(data.id).set(data);
+  });
+
+  socket.on('delete', function(data) {
+    console.log('delete', data)
+    if(data.client == App.clientId) return;
+    notes.remove(notes.get(data.id))
   });
 };
 

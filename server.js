@@ -4,7 +4,7 @@
 
 var express = require('express'),
     mongodb = require('mongodb'),
-    io = require('socket.io');
+    socketio = require('socket.io');
 
 var app = module.exports = express.createServer();
 
@@ -67,7 +67,7 @@ app.post('/notes', function(req, res){
     if(err) res.send(err, 500);
     else {
       var note = noteHash(docs[0]);
-      socket.broadcast({action: 'create', data: note});
+      io.sockets.emit('create', note);
       res.send(note);
     }
   });
@@ -79,7 +79,7 @@ app.put('/notes/:id', function(req, res){
   notes.update({_id: new ObjectID(req.params.id)}, note, {safe: true}, function(err, note){
     if(err) res.send(err, 500);
     else {
-      socket.broadcast({action: 'update', data: note});
+      io.sockets.emit('update', note);
       res.send(noteHash(note));
     }
   });
@@ -89,7 +89,7 @@ app.delete('/notes/:id', function(req, res){
   notes.remove({_id: new ObjectID(req.params.id)}, function(err, result){
     if(err) res.send(err, 500);
     else {
-      socket.broadcast({action: 'delete', data: {id: req.params.id}});
+      io.sockets.emit('delete', {id: req.params.id});
       res.send({success: true});
     }
   });
@@ -99,7 +99,7 @@ app.delete('/notes/:id', function(req, res){
 
 var db = new mongodb.Db('crk', new mongodb.Server('localhost', 27017, {}));
 
-var socket, notes, ObjectID;
+var io, notes, ObjectID;
 
 db.open(function(err, client){
   if(err) throw err;
@@ -111,5 +111,5 @@ db.open(function(err, client){
 });
 
 app.listen(process.env.PORT || 3000);
-socket = io.listen(app);
+io = socketio.listen(app);
 console.log("Express server listening on port %d", app.address().port);
